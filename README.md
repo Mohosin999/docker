@@ -1,4 +1,4 @@
-# 🐳 Docker
+# 🐳 Node.js App with Docker
 
 ### Q: If we use Docker Compose, do we still need a Dockerfile?
 
@@ -17,7 +17,41 @@ api/
 ├── src/
 ├── package.json
 ├── Dockerfile   👈 here
-├── .dockerignore 👈 must create this file & keep node_modules inside it.
+├── .dockerignore 👈 also create this file & keep node_modules inside it.
 ```
 
 This allows Docker to access your dependencies and source code properly.
+
+### 📌 Dockerfile লেখার সিরিয়াল (Order)
+
+- FROM → কোন base image ব্যবহার করবে
+- WORKDIR → কাজের directory সেট করা
+- COPY → project file কপি করা
+- RUN → dependency install করা
+- EXPOSE → কোন port expose করবে
+- CMD (বা ENTRYPOINT) → app কীভাবে run হবে
+
+Below is a simple example Dockerfile:
+
+```
+# 1️⃣ Base Image
+FROM node:20-alpine
+
+# 2️⃣ Working Directory
+WORKDIR /app
+
+# 3️⃣ Copy package files
+COPY package*.json ./
+
+# 4️⃣ Install dependencies
+RUN npm install
+
+# 5️⃣ Copy rest of the files
+COPY . .
+
+# 6️⃣ Expose port
+EXPOSE 5000
+
+# 7️⃣ Run app
+CMD ["npm", "start"]
+```
