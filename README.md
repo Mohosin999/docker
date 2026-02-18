@@ -78,4 +78,8 @@ amra jotobar application run korte chaibo totobar ai docker run ta dite hobe. am
 ├── docker-compose.yaml
 ```
 
+- docker-compose up
 - docker-compose up --build (use --build if you want to rebuild it)
+- docker-compose down
+- docker logs
+- docker network ls (to show all networks)

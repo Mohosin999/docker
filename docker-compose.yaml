@@ -9,3 +9,9 @@ services:
       - "4000:8080"
     volumes:
       - ./api:/app
+    networks:
+      - demo-network
+
+networks:
+  demo-network:
+    driver: bridge
