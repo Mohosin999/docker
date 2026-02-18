@@ -8,6 +8,8 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
+RUN yarn build
+
 # it will use at the build time
 ENV PORT 8080
 

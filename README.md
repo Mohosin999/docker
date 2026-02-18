@@ -55,3 +55,27 @@ EXPOSE 5000
 # 7️⃣ Run app
 CMD ["npm", "start"]
 ```
+
+### Let's Build a New Image
+
+Since we have dockerfile, let's build it
+
+- docker system prune
+- docker images
+- docker ps -la
+- 👉 docker build -t my-test-api .
+- docker run -it --rm -p 4000:8080 --name my-test-api-con my-test-api
+
+my-test-api-con = con means
+amra jotobar application run korte chaibo totobar ai docker run ta dite hobe. amra aivbae korbo na, amra docker compose file nibo, ata nibo amra root e
+
+```
+├── api
+    - src
+    - .dockerignore
+    - Dockerfile
+    - package.json
+├── docker-compose.yaml
+```
+
+- docker-compose up --build (use --build if you want to rebuild it)
