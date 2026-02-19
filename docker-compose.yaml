@@ -1,8 +1,46 @@
 version: "3.8"
 
 services:
+  demo-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "4000:8080"
+    volumes:
+      - ./api:/app
+    networks:
+      - demo-network
+    depends_on:
+      - demo-mongo
+
+  # mongo db
+  demo-mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - demo-network
+    volumes:
+      - demo-mongo-data:/data/db
+
+  # mongo express
+  demo-mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=demo-mongo
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=password
+    networks:
+      - demo-network
+    depends_on:
+      - demo-mongo
+
+  # postgres
   demo-postgres:
-    image: postgres:18
+    image: postgres:latest
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -14,6 +52,7 @@ services:
     networks:
       - demo-network
 
+  # pgadmin
   demo-pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -21,14 +60,42 @@ services:
       PGADMIN_DEFAULT_PASSWORD: password
     ports:
       - "5050:80"
-    networks:
-      - demo-network
     depends_on:
       - demo-postgres
+    networks:
+      - demo-network
+
+  # redis stack
+  demo-redis-stack:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - demo-redis-data:/var/lib/redis-stack
+    environment:
+      - REDIS_ARGS=--save 900 1
+    networks:
+      - demo-network
+
+  # rabbitmq
+  demo-rabbitmq:
+    image: rabbitmq:3.8-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - demo-rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - demo-network
 
 networks:
   demo-network:
     driver: bridge
 
+# To persist data, use volumes
 volumes:
+  demo-mongo-data:
   demo-postgres-data:
+  demo-redis-data:
+  demo-rabbitmq-data:
