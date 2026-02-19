@@ -1,0 +1,76 @@
+version: "3.8"
+
+services:
+  demo-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "4000:8080"
+    volumes:
+      - ./api:/app
+    networks:
+      - demo-network
+    # when the container starts, it will wait for the mongo db to start
+    depends_on:
+      - demo-mongo
+
+  # mongo db
+  demo-mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - demo-network
+    volumes:
+      - demo-mongo-data:/data/db
+
+  # mongo express
+  demo-mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=password
+    networks:
+      - demo-network
+    depends_on:
+      - demo-mongo
+
+  # postgres
+  demo-postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - demo-postgres-data:/var/lib/postgresql/data
+    networks:
+      - demo-network
+
+  # pgadmin
+  demo-pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+    depends_on:
+      - demo-postgres
+    networks:
+      - demo-network
+
+networks:
+  demo-network:
+    driver: bridge
+
+# To persist data, use volumes
+volumes:
+  demo-mongo-data:
+  demo-postgres-data:
