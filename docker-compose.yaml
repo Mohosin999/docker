@@ -11,7 +11,39 @@ services:
       - ./api:/app
     networks:
       - demo-network
+    # when the container starts, it will wait for the mongo db to start
+    depends_on:
+      - demo-mongo
+
+  # mongo db
+  demo-mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - demo-network
+    volumes:
+      # /data/db is where a mongo db stores it's data
+      - demo-mongo-data:/data/db
+
+  # mongo express
+  demo-mongo-express:
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=password
+    networks:
+      - demo-network
+    depends_on:
+      - demo-mongo
 
 networks:
   demo-network:
     driver: bridge
+
+# To persist data, use volumes
+volumes:
+  demo-mongo-data:
