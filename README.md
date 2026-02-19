@@ -62,7 +62,10 @@ Since we have dockerfile, let's build it
 
 - docker system prune
 - docker images
+- docker ps
+- docker ps -a
 - docker ps -la
+- docker inspect (service_name)
 - 👉 docker build -t my-test-api .
 - docker run -it --rm -p 4000:8080 --name my-test-api-con my-test-api
 
@@ -83,3 +86,5 @@ amra jotobar application run korte chaibo totobar ai docker run ta dite hobe. am
 - docker-compose down
 - docker logs
 - docker network ls (to show all networks)
+
+**host.docker.internal**

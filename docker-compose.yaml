@@ -23,7 +23,6 @@ services:
     networks:
       - demo-network
     volumes:
-      # /data/db is where a mongo db stores it's data
       - demo-mongo-data:/data/db
 
   # mongo express
@@ -43,28 +42,29 @@ services:
   # postgres
   demo-postgres:
     image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    networks:
-      - demo-network
     volumes:
       - demo-postgres-data:/var/lib/postgresql/data
+    networks:
+      - demo-network
 
   # pgadmin
   demo-pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
     ports:
       - "5050:80"
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@example.com
-      - PGADMIN_DEFAULT_PASSWORD=password
-    networks:
-      - demo-network
     depends_on:
       - demo-postgres
+    networks:
+      - demo-network
 
 networks:
   demo-network:
