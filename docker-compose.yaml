@@ -40,6 +40,19 @@ services:
     depends_on:
       - demo-mongo
 
+  # postgres
+  demo-postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    networks:
+      - demo-network
+    volumes:
+      - demo-postgres-data:/var/lib/postgresql/data
+
 networks:
   demo-network:
     driver: bridge
@@ -47,3 +60,4 @@ networks:
 # To persist data, use volumes
 volumes:
   demo-mongo-data:
+  demo-postgres-data:
