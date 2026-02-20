@@ -8,9 +8,10 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-# ENV used at the build time
+RUN yarn build
+
 ENV PORT 8080
 
 EXPOSE 8080
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]
